@@ -13,7 +13,7 @@ namespace User_prac_sorry_kishean
 {
     public partial class Form1 : Form
     {
-        string connStr = "server=localhost;user=root;password=;database=;";
+        string connStr = "server=localhost;user=root;password=;database=userPrac;";
         public Form1()
         {
             InitializeComponent();
@@ -26,9 +26,28 @@ namespace User_prac_sorry_kishean
 
         private void LoadData()
         {
-           
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
 
+                    string query = "SELECT * FROM user";
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+
+                    adapter.Fill(dt);
+
+                    dataGridView1.DataSource = dt;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
         }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -42,6 +61,9 @@ namespace User_prac_sorry_kishean
 
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.ExecuteNonQuery();
+
+                    textBox1.Clear();
+                    LoadData();
                 }
                 catch (Exception ex)
                 {
